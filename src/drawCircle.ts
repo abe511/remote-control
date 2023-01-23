@@ -1,12 +1,23 @@
 import { mouse, straightTo, Point } from "@nut-tree/nut-js";
 
-export default async (x: number, y: number) => {
-    let a, b, c, d: Point;
+export default async (radius: number) => {
+    let b: Point;
+    const center = await mouse.getPosition();
+    const steps = 60;
+
     try {
-        a = await mouse.getPosition();
-        b = new Point(a.x + x, a.y);
-        await mouse.drag(straightTo(a));
+        b = new Point(center.x + radius, center.y);
+
+        for (let i = 0; i < steps; i++) {
+            b.x = (center.x + radius * Math.cos(2 * Math.PI * i / steps));
+            b.y = (center.y + radius * Math.sin(2 * Math.PI * i / steps));
+            await mouse.drag(straightTo(b));
+        }
+
     } catch(err) {
         console.log(err);
     }
+
+
+
 };

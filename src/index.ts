@@ -4,6 +4,7 @@ import { mouse, up, down, left, right, straightTo, Point } from "@nut-tree/nut-j
 import { config } from "dotenv";
 import drawRectangle from "./drawRectangle";
 import drawCircle from "./drawCircle";
+import grabImage from "./grabImage";
 
 config();
 
@@ -54,7 +55,7 @@ wss.on("connection", (ws, req) => {
                 break;
             }
             case "draw_circle":
-                drawCircle(parseInt(cmd[1]), parseInt(cmd[1]));
+                drawCircle(parseInt(cmd[1]));
                 console.log(`<- ${cmd[0]} ${cmd[1]}`.toString());
                 ws.send(`${cmd[0]} ${cmd[1]}`.toString());
                 break;
@@ -71,9 +72,17 @@ wss.on("connection", (ws, req) => {
                 break;
             }
             case "prnt_scrn": {
-                console.log(`<- ${cmd[0]} {${cmd[1]}} {${cmd[2]}}`);
-                console.log(`-> ${cmd[0]} {base64 string (png buf)`); // PNG BUFFER BASE64 STRING HERE
-                ws.send("send base64 string"); // SEND PNG BUFFER BASE64 STRING
+                const region = {width: 200, height: 200};
+                // .data.toString("base64")
+                console.log(`<- ${cmd[0]}`);
+                grabImage(region.width, region.height)
+                    .then((image) => {
+                        console.log(image);
+                        // const buf = image?.data.toString("base64");
+                        const buf = image?.toString();
+                        // console.log(`-> ${cmd[0]} ${buf}`.toString());
+                        ws.send(`${cmd[0]} ${buf}`.toString());
+                });
                 break;
             }
         }
