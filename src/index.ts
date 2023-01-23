@@ -73,11 +73,10 @@ wss.on("connection", (ws, req) => {
             }
             case "prnt_scrn": {
                 const region = {width: 200, height: 200};
-                // .data.toString("base64")
                 console.log(`<- ${cmd[0]}`);
                 grabImage(region.width, region.height)
                     .then((image) => {
-                        console.log(image);
+                        // console.log(image);
                         // const buf = image?.data.toString("base64");
                         const buf = image?.toString();
                         // console.log(`-> ${cmd[0]} ${buf}`.toString());
